@@ -1,0 +1,41 @@
+{
+ "elemento": "as frases dos detalhes (a camada melódica)",
+ "cenas": [
+  {
+   "inicio": 0.0,
+   "fase": "Começo",
+   "elemento": "o fundo e as gotas",
+   "brilho": 0.0
+  },
+  {
+   "inicio": 173.17,
+   "fase": "Desenvolvimento",
+   "elemento": "a primeira frase dos detalhes",
+   "brilho": 0.3333333333333333
+  },
+  {
+   "inicio": 308.96,
+   "fase": "Expansão",
+   "elemento": "os detalhes entram de vez",
+   "brilho": 0.6666666666666666
+  },
+  {
+   "inicio": 450.68,
+   "fase": "Ponto alto",
+   "elemento": "a frase mais alta",
+   "brilho": 1.0
+  },
+  {
+   "inicio": 591.12,
+   "fase": "Volta",
+   "elemento": "a última frase forte",
+   "brilho": 0.6666666666666666
+  },
+  {
+   "inicio": 734.27,
+   "fase": "Fim",
+   "elemento": "a última frase",
+   "brilho": 0.0
+  }
+ ]
+}

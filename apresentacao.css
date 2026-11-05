@@ -1,0 +1,931 @@
+/* The Art of Transformation · editorial presentation of the roteiro, act by act. White page, sharp corners, one accent
+   (the logo's blue, only for what already matches and for the active picture), Times for the titles. */
+:root{
+  --paper:#fdfdfd;
+  --ink:#121214;
+  --graphite:#5d6168;
+  --silver:#b4b8bf;
+  --hair:#e6e7ea;
+  --accent:#1a7fc4;
+  --serif:"Times New Roman",Times,serif;
+  --sans:"Neue Haas Unica","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:"Cascadia Mono","SF Mono",Consolas,ui-monospace,monospace;
+  --page:min(1400px,100% - 64px);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+body{font:400 16px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+button,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{margin:0;font-weight:400}
+
+/* bar */
+.bar{position:sticky;top:0;z-index:20;height:60px;display:flex;align-items:center;gap:28px;padding:0 32px;background:rgba(253,253,253,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--hair)}
+.brand{font:400 13px/1 var(--serif);letter-spacing:.24em;text-transform:uppercase;color:var(--ink);text-decoration:none;white-space:nowrap}
+.acts-nav{display:flex;gap:2px;margin:0 auto}
+.acts-nav a{font:400 17px/1 var(--serif);color:var(--graphite);text-decoration:none;padding:8px 10px}
+.acts-nav a:hover,.acts-nav a[aria-current=true]{color:var(--ink)}
+.acts-nav a[aria-current=true]{box-shadow:inset 0 -2px 0 var(--ink)}
+.btn{background:var(--paper);border:1px solid var(--ink);padding:8px 14px;font-size:13px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn:active{transform:translateY(1px)}
+.btn[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.btn.quiet{border-color:var(--hair);color:var(--graphite)}
+.btn.quiet:hover{border-color:var(--ink);background:var(--paper);color:var(--ink)}
+
+/* cover */
+.cover{width:var(--page);margin:0 auto;min-height:calc(100dvh - 60px);display:flex;flex-direction:column;justify-content:center;gap:28px;padding:64px 0}
+.cover h1{font:400 clamp(48px,8.4vw,136px)/.95 var(--serif);letter-spacing:.06em;text-transform:uppercase}
+.cover .lede{font:400 clamp(20px,1.8vw,26px)/1.35 var(--serif);color:var(--graphite);margin:0}
+.loading{color:var(--graphite)}
+
+/* the eight acts at a glance */
+.glance{width:var(--page);margin:0 auto;padding:96px 0 120px}
+.glance h2,.act h2,.next h2{font:400 clamp(40px,4.6vw,68px)/1 var(--serif)}
+.glance ol{list-style:none;margin:40px 0 0;padding:0;display:grid;gap:4px}
+.glance a{display:grid;grid-template-columns:64px minmax(0,1fr) minmax(0,1.3fr) 320px;gap:28px;align-items:center;padding:14px 0;color:inherit;text-decoration:none}
+.glance a:hover .g-name{text-decoration:underline;text-underline-offset:4px}
+.g-n{font:400 34px/1 var(--serif)}
+.g-name{font:600 16px/1.3 var(--sans)}
+.g-dish{font:400 19px/1.35 var(--serif);color:var(--graphite)}
+.g-pic{aspect-ratio:6410/1150;background:var(--hair)}
+.g-pic img{width:100%;height:100%;object-fit:cover}
+.g-marks{display:block;font-size:13px;letter-spacing:.2em;margin-top:6px}
+
+/* marks: filled already matches · half partly · empty to make */
+.mk{display:inline-block;width:1.15em;text-align:center;color:var(--silver)}
+.mk.tem{color:var(--accent)}
+.mk.parte{color:var(--graphite)}
+
+/* an act */
+.act{width:var(--page);margin:0 auto;padding:110px 0 40px;border-top:1px solid var(--hair);display:grid;gap:40px}
+.act-head{display:grid;grid-template-columns:auto 1fr;gap:12px 32px;align-items:end}
+.act-n{font:400 clamp(90px,10vw,170px)/.78 var(--serif);letter-spacing:-.02em;grid-row:span 3}
+.act-dish{margin:0;font:400 clamp(20px,1.8vw,26px)/1.3 var(--serif);color:var(--graphite);max-width:60ch}
+
+/* the room in 3D (one live room, placed over the act on screen) */
+.stage{display:grid;gap:10px}
+.stage-box{position:relative;aspect-ratio:16/9;max-height:78dvh;width:100%;background:#0d0d0f;overflow:hidden}
+.stage-box>img{width:100%;height:100%;object-fit:cover;opacity:.9}
+.stage-box .wait{position:absolute;left:16px;bottom:14px;font:12px var(--mono);color:#d8d9dc}
+.stage-tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.stage-tools .hint{margin-left:auto;font-size:13px;color:var(--graphite)}
+#room3d{position:absolute;border:0;z-index:5;background:#0d0d0f;visibility:hidden}
+
+/* the deck's own reference for the dish */
+.ref{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:32px;align-items:start}
+.ref img{width:100%;max-height:60dvh;object-fit:contain;background:var(--hair)}
+.ref p{margin:0;font:400 18px/1.45 var(--serif);color:var(--graphite)}
+.ref-empty{display:none}
+.editing .ref-empty{display:block;border:1px dashed var(--silver);padding:28px;color:var(--graphite);font-size:14px}
+
+/* walls and tables, full width */
+.surface{display:grid;gap:18px}
+.surface h3{font:600 13px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--graphite)}
+.pic{margin:0;display:grid;gap:8px}
+.pic-frame{position:relative;cursor:pointer;background:var(--hair);outline:2px solid transparent;outline-offset:4px;transition:outline-color .2s}
+.pic.active .pic-frame{outline-color:var(--accent)}
+.pic-frame img{width:100%;object-fit:cover}
+.pic.wall img{aspect-ratio:6410/1150}
+.pic.table img{aspect-ratio:2682/540}
+.pic-text{position:absolute;left:35.02%;top:30%;transform:translate(-50%,-50%);white-space:nowrap;font:400 1.79cqw/1 var(--serif);letter-spacing:.12em;color:#000;pointer-events:none}
+.pic-frame{container-type:inline-size}
+.pic figcaption{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;font-size:13.5px;color:var(--graphite)}
+.pic figcaption .tools{display:none;gap:6px;margin-left:auto}
+.editing .pic figcaption .tools{display:flex}
+.add{display:none;justify-self:start}
+.editing .add{display:inline-block}
+
+/* the dish's elements and what to make */
+.act-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;padding-top:12px}
+.act-notes h3{font:400 26px/1.1 var(--serif);margin-bottom:16px}
+.els{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.els li{display:grid;grid-template-columns:24px 1fr;gap:6px}
+.els strong{display:block;font:600 15px/1.35 var(--sans)}
+.els small{display:block;font-size:13.5px;color:var(--graphite)}
+.make{margin:0;padding:0 0 0 22px;display:grid;gap:12px;font:400 19px/1.4 var(--serif)}
+.make li::marker{font:13px var(--mono);color:var(--graphite)}
+.prompts{display:none;margin-top:24px;gap:8px}
+.editing .prompts{display:grid}
+.prompts p{margin:0;font:12px/1.55 var(--mono);color:var(--graphite);background:#f3f4f5;padding:12px;user-select:all}
+
+/* next steps */
+.next{width:var(--page);margin:0 auto;padding:110px 0 140px;border-top:1px solid var(--hair)}
+.next ol{margin:40px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 64px}
+.next li strong{display:block;font:400 24px/1.2 var(--serif);margin-bottom:6px}
+.next li p{margin:0;color:var(--graphite);max-width:52ch}
+
+/* picker */
+dialog{border:0;padding:0;width:min(1200px,94vw);max-height:88dvh;background:var(--paper);color:var(--ink)}
+dialog::backdrop{background:rgba(18,18,20,.55)}
+.picker-head{position:sticky;top:0;display:flex;align-items:center;gap:20px;padding:18px 24px;background:var(--paper);border-bottom:1px solid var(--hair)}
+.picker-head h2{font:400 28px/1 var(--serif);margin-right:auto}
+.field{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--graphite)}
+.field select{border:1px solid var(--hair);background:var(--paper);padding:6px 8px}
+.picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;padding:20px 24px 28px;overflow:auto;max-height:calc(88dvh - 70px)}
+.picker-grid button{border:0;padding:0;background:none;cursor:pointer;text-align:left;display:grid;gap:4px}
+.picker-grid img{width:100%;aspect-ratio:720/130;object-fit:cover;background:var(--hair);outline:2px solid transparent;outline-offset:2px}
+.picker-grid.tables img{aspect-ratio:2682/540}
+.picker-grid button:hover img{outline-color:var(--ink)}
+.picker-grid span{font-size:12px;color:var(--graphite);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.picker-empty{color:var(--graphite);padding:40px 24px}
+
+@media (max-width:1000px){
+  .glance a{grid-template-columns:48px 1fr;}
+  .glance .g-dish,.glance .g-pic{grid-column:2}
+  .act-notes,.ref,.next ol{grid-template-columns:1fr}
+  .acts-nav{display:none}
+}
+@media (max-width:640px){
+  :root{--page:calc(100% - 32px)}
+  .bar{padding:0 16px}
+  .act{padding-top:72px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.pic-frame{transition:none}}
+@media print{.bar,#room3d,.stage-tools{display:none}.act{break-before:page}}
+
+/* the dish as the deck shows it */
+.dish-photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.dish-photos figure{margin:0;display:grid;gap:8px}
+.dish-photos img{width:100%;height:clamp(220px,28vw,380px);object-fit:cover;background:var(--hair)}
+.dish-photos figcaption{font:400 16px/1.35 var(--serif);color:var(--graphite)}
+.no-photo{margin:0;color:var(--graphite)}
+/* the room: fixed views only, the page scrolls over it */
+#room3d{pointer-events:none}
+.stage-tools .btn[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+/* the logo on the wall pictures */
+.pic .pic-frame img.pic-logo{position:absolute;aspect-ratio:1;height:auto;max-width:none;object-fit:contain;transform:translate(-50%,-50%);pointer-events:none}
+
+/* the act's soundtrack: a square button, a thin line to drag along, the time */
+.player{grid-column:2;display:grid;grid-template-columns:44px auto minmax(160px,1fr) auto;gap:16px;align-items:center;max-width:720px;margin-top:6px}
+.play{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer;transition:background .2s,color .2s}
+.play:hover,.player.on .play{background:var(--ink);color:var(--paper)}
+.play:active{transform:translateY(1px)}
+.play svg{width:18px;height:18px;stroke-width:1.5}
+.p-name{font-size:14px;color:var(--graphite);white-space:nowrap}
+.p-name b{font:400 18px/1 var(--serif);color:var(--ink);margin-left:4px}
+.p-time{font:12px var(--mono);color:var(--graphite);white-space:nowrap}
+.scrub{--p:0%;-webkit-appearance:none;appearance:none;width:100%;height:18px;background:transparent;cursor:pointer;margin:0}
+.scrub::-webkit-slider-runnable-track{height:1px;background:linear-gradient(90deg,var(--ink) var(--p),var(--silver) var(--p))}
+.scrub::-moz-range-track{height:1px;background:var(--silver)}
+.scrub::-moz-range-progress{height:1px;background:var(--ink)}
+.scrub::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;margin-top:-5px;background:var(--ink);border:0}
+.scrub::-moz-range-thumb{width:11px;height:11px;background:var(--ink);border:0;border-radius:0}
+.scrub:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+@media (max-width:640px){.player{grid-column:1 / -1;grid-template-columns:44px 1fr auto}.player .p-name{display:none}}
+@media (prefers-reduced-motion:reduce){.play{transition:none}}
+
+/* v10 · one place for each thing: the dish (its own titled block, first), then the room with its views and its
+   soundtrack together under it. Shape rule: everything you press is round (pills, circles); pictures stay square. */
+.btn{border-radius:999px;padding:9px 18px}
+.field select{border-radius:999px;padding:6px 12px}
+.block-title,.surface h3{font:400 26px/1.1 var(--serif);letter-spacing:0;text-transform:none;color:var(--ink)}
+.dish,.stage{display:grid;gap:16px}
+.dish-photos{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:thin}
+.dish-photos figure{flex:0 0 auto;width:calc(clamp(240px,24vw,340px) * var(--ar,.8));max-width:82vw;scroll-snap-align:start}
+.dish-photos img{height:clamp(240px,24vw,340px)}
+.dish-photos figcaption{font:400 16px/1.35 var(--serif);color:var(--graphite);max-width:36ch}
+/* under the room: the views on the left, the soundtrack on the right */
+.stage-tools{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.views{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--hair);border-radius:999px}
+.view{border:0;background:transparent;border-radius:999px;padding:8px 16px;font-size:13.5px;color:var(--graphite);cursor:pointer;white-space:nowrap;transition:background .2s,color .2s}
+.view:hover{color:var(--ink)}
+.view[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.view:active{transform:scale(.98)}
+.stage-tools .player{grid-column:auto;margin:0;flex:1 1 420px;max-width:620px;grid-template-columns:40px auto minmax(120px,1fr) auto;gap:14px;padding:3px 18px 3px 3px;border:1px solid var(--hair);border-radius:999px}
+.play{width:40px;height:40px;border-radius:50%}
+.scrub::-webkit-slider-thumb{border-radius:50%}
+.scrub::-moz-range-thumb{border-radius:50%}
+@media (max-width:640px){.stage-tools .player{flex-basis:100%;grid-template-columns:40px 1fr auto}.views{width:100%;overflow-x:auto}}
+@media (prefers-reduced-motion:reduce){.view{transition:none}}
+.dish-cap{margin:-6px 0 0;font:400 16px/1.35 var(--serif);color:var(--graphite)}
+.dish[hidden]{display:none}
+
+/* v11 · an act's pictures: walls or tables, one big with the rest behind "+N", or all big */
+.images{display:grid;gap:18px}
+.img-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px}
+.img-head .block-title{margin-right:8px}
+.seg{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--hair);border-radius:999px}
+.seg-b{border:0;background:transparent;border-radius:999px;padding:7px 15px;font-size:13.5px;color:var(--graphite);cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;transition:background .2s,color .2s}
+.seg-b:hover{color:var(--ink)}
+.seg-b[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.seg-b:active{transform:scale(.98)}
+.seg-n{font:11px var(--mono);opacity:.7}
+.img-edit{display:none;gap:8px;margin-left:auto}
+.editing .img-edit{display:flex;flex-wrap:wrap}
+.img-list{display:grid;gap:22px}
+.in-room{font-size:12px;color:var(--accent)}
+.more{justify-self:start;display:inline-flex;align-items:center;gap:14px;padding:6px 20px 6px 6px;border:1px solid var(--hair);border-radius:999px;background:var(--paper);cursor:pointer;transition:border-color .2s}
+.more:hover{border-color:var(--ink)}
+.more:active{transform:scale(.98)}
+.more-thumbs{display:flex}
+.more-thumbs img{width:96px;height:34px;object-fit:cover;border-radius:999px;border:2px solid var(--paper);background:var(--hair)}
+.more-thumbs img+img{margin-left:-28px}
+.more-n{font:400 22px/1 var(--serif);color:var(--ink)}
+.more-t{font-size:13.5px;color:var(--graphite)}
+#gallery{width:min(1500px,96vw)}
+.gallery-list{display:grid;gap:28px;padding:24px;overflow:auto;max-height:calc(88dvh - 70px)}
+#groups{width:min(900px,94vw)}
+.groups-list{display:grid;gap:8px;padding:16px 24px 24px;overflow:auto;max-height:calc(88dvh - 70px)}
+.grp{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;text-align:left;padding:12px 12px 12px 22px;border:1px solid var(--hair);border-radius:999px;background:var(--paper);cursor:pointer}
+.grp:hover{border-color:var(--ink)}
+.grp strong{display:block;font:400 20px/1.2 var(--serif)}
+.grp small{display:block;font-size:13px;color:var(--graphite)}
+.grp-thumbs{display:flex}
+.grp-thumbs img{width:110px;height:36px;object-fit:cover;border-radius:999px;border:2px solid var(--paper);background:var(--hair)}
+.grp-thumbs img+img{margin-left:-30px}
+@media (max-width:640px){.grp{grid-template-columns:1fr;border-radius:20px}.img-edit{margin-left:0}.more-thumbs{display:none}}
+@media (prefers-reduced-motion:reduce){.seg-b,.more{transition:none}}
+.pic .in-room{display:none}
+.pic.active .in-room{display:inline}
+
+.btn.danger,.btn.quiet.danger{background:#a3261c;border-color:#a3261c;color:#fff}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);z-index:30;max-width:min(560px,92vw);padding:12px 20px;border-radius:999px;background:var(--ink);color:var(--paper);font-size:14px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+/* v16 · the act's box shows a picture of its own room until the live room comes (with a short fade) */
+.stage-box>img.snap{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1}
+#room3d{transition:opacity .35s ease}
+.p-name small{margin-left:8px;font-size:12px;color:var(--graphite)}
+@media (prefers-reduced-motion:reduce){#room3d{transition:none}}
+
+/* the council: what to do now, per act and overall; checkpoints anyone can tick */
+.council{border-top:1px solid var(--hair);padding-top:28px;display:grid;gap:14px;max-width:880px}
+.council-head,.verdict-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 18px}
+.council-head h3{font:400 26px/1.1 var(--serif)}
+.council-count{font:12px var(--mono);color:var(--graphite)}
+.council-note{margin:0;font:400 19px/1.45 var(--serif);color:var(--ink);max-width:62ch}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.checks label{display:grid;grid-template-columns:22px 1fr;gap:12px;align-items:start;cursor:pointer;font-size:15px;line-height:1.45}
+.checks input{appearance:none;-webkit-appearance:none;width:20px;height:20px;margin:1px 0 0;border:1px solid var(--silver);border-radius:50%;background:var(--paper);cursor:pointer;display:grid;place-items:center;transition:background .2s,border-color .2s}
+.checks input::after{content:"";width:9px;height:5px;border:solid var(--paper);border-width:0 0 2px 2px;transform:translateY(-1px) rotate(-45deg);opacity:0}
+.checks input:checked{background:var(--accent);border-color:var(--accent)}
+.checks input:checked::after{opacity:1}
+.checks input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.checks li.done span{color:var(--graphite);text-decoration:line-through;text-decoration-color:var(--silver)}
+.g-prog{display:block;font:11px var(--mono);color:var(--graphite);margin-top:4px}
+.verdict{display:grid;gap:22px}
+.verdict-pos{margin:0;font:400 clamp(22px,2.2vw,30px)/1.35 var(--serif);max-width:58ch}
+.verdict-conf{margin:0;color:var(--graphite);max-width:70ch}
+.verdict-conf strong{color:var(--ink);font-weight:600}
+.verdict-cols{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:56px;margin-top:8px}
+.verdict-cols h3{font:400 24px/1.1 var(--serif);margin:0 0 14px}
+.verdict-cols .checks+h3{margin-top:28px}
+.risks{margin:0;padding:0 0 0 22px;display:grid;gap:14px}
+.risks li::marker{font:13px var(--mono);color:var(--graphite)}
+.risks strong{display:block;font:400 19px/1.25 var(--serif)}
+.risks p{margin:2px 0 0;color:var(--graphite);font-size:14.5px}
+.minority{margin:28px 0 0;padding:16px 20px;border-left:2px solid var(--ink);background:#f4f5f6}
+.minority p{margin:0;font:400 italic 18px/1.45 var(--serif)}
+.minority cite{display:block;margin-top:8px;font:normal 12px var(--mono);color:var(--graphite)}
+.verdict-src{margin:0;font-size:13px;color:var(--graphite)}
+@media (max-width:1000px){.verdict-cols{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.checks input{transition:none}}
+.verdict ol.risks{display:grid;grid-template-columns:1fr;gap:16px;margin:0;padding:0 0 0 22px;list-style:decimal}
+.verdict .risks li strong{font:400 19px/1.25 var(--serif);margin:0}
+.verdict .risks li p{max-width:none}
+.acts-nav a.nav-now{font:400 13px/1 var(--sans);margin-left:10px;padding:8px 14px;border:1px solid var(--hair);border-radius:999px;align-self:center}
+.acts-nav a.nav-now:hover{border-color:var(--ink)}
+.pic.inverted .pic-text{color:#fff}
+
+/* the council, second reading: the act's dominant universe and its brand elements */
+.council-dom{margin:0;font-size:13px;color:var(--graphite)}
+.council-dom strong{font:400 20px/1 var(--serif);color:var(--ink);margin-left:6px}
+.council h4{margin:10px 0 2px;font:600 12px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--graphite)}
+.ck-text{display:grid;gap:2px}
+.ck-label{display:flex;align-items:baseline;gap:10px}
+.ck-label strong{font:400 18px/1.2 var(--serif);color:var(--ink)}
+.ck-label .st{font:normal 11px var(--mono);color:var(--graphite)}
+.ck-label .st.tem{color:var(--accent)}
+.checks li.done .ck-label strong{color:var(--graphite)}
+.kit-title{font:400 24px/1.1 var(--serif);margin-top:8px}
+.brand-kit{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair)}
+.brand-kit div{background:var(--paper);padding:16px 18px;display:grid;gap:4px}
+.brand-kit strong{font:400 20px/1.2 var(--serif)}
+.brand-kit span{font-size:13.5px;color:var(--graphite)}
+@media (max-width:800px){.brand-kit{grid-template-columns:1fr}}
+
+/* "Da forma à joia": the five stages of the transformation, in order, before the acts */
+.journey{width:var(--page);margin:0 auto;padding:96px 0 40px;display:grid;gap:40px}
+.journey-head{display:grid;gap:16px;max-width:760px}
+.journey-head h2{font:400 clamp(40px,4.6vw,68px)/1 var(--serif)}
+.journey-head p{margin:0;font:400 clamp(19px,1.6vw,23px)/1.45 var(--serif);color:var(--graphite)}
+.stages{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0 20px}
+.stages>li{display:grid;grid-row:span 6;grid-template-rows:subgrid;row-gap:10px;align-content:start;position:relative;margin-bottom:32px}
+.stage-pic{display:block;aspect-ratio:4/5;overflow:hidden;background:#0d0d0f}
+.stage-pic img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.stage-pic:hover img{transform:scale(1.03)}
+.stage-pic:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.stages h3{font:400 21px/1.15 var(--serif);margin:0}
+.stage-acts{font:12px var(--mono);color:var(--graphite)}
+.stages p{margin:0;font:400 16px/1.45 var(--serif)}
+.stage-brand{list-style:none;margin:4px 0 0;padding:10px 0 0;border-top:1px solid var(--hair);display:grid;gap:6px;align-content:start;font-size:13px;color:var(--graphite);line-height:1.4}
+.stage-brand strong{color:var(--ink);font-weight:600}
+@media (max-width:1300px){.stages{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:900px){.stages{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.stages{grid-template-columns:1fr}.stage-pic{aspect-ratio:16/9}}
+@media (prefers-reduced-motion:reduce){.stage-pic img{transition:none}}
+
+/* the top of an act: stage and universe, then what the act is in the roteiro */
+.act-meta{margin:2px 0 0;font-size:14px;color:var(--graphite)}
+.act-meta strong{font-weight:600;color:var(--ink)}
+.act-head .act-dish{max-width:62ch}
+.dish-text{margin:-6px 0 2px;font:400 19px/1.4 var(--serif);color:var(--graphite);max-width:70ch}
+.act-head{align-items:start;row-gap:10px}
+.act-head .act-n{align-self:start;margin-top:4px}
+
+/* prompts to generate the act's pictures (edit mode) */
+.prompts h4{margin:0;font:600 12px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--graphite)}
+.prompt{display:grid;gap:6px}
+.prompt-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.prompt-top strong{font:400 18px/1 var(--serif)}
+.prompt-top .btn{padding:6px 14px;font-size:12.5px}
+.stage-state{font:400 italic 17px/1 var(--serif);color:var(--graphite);margin-top:6px}
+
+/* what the Council cut from an act, folded */
+.council-cut{margin-top:6px;border-top:1px solid var(--hair);padding-top:12px}
+.council-cut summary{cursor:pointer;font-size:13px;color:var(--graphite);list-style-position:outside}
+.council-cut summary:hover{color:var(--ink)}
+.council-cut ul{margin:10px 0 0;padding:0 0 0 18px;display:grid;gap:6px;font-size:13.5px;color:var(--graphite)}
+.council-cut strong{font-weight:600;color:var(--ink)}
+.council-forma{margin:0;font:400 17px/1.4 var(--serif);color:var(--ink)}
+.council-forma strong{font:600 13px/1 var(--sans);color:var(--graphite);margin-right:4px}
+
+/* the master prompt for the end of the night */
+.prompt p.master{white-space:pre-line}
+.master-box{display:grid;gap:12px;max-width:900px}
+.master-box .prompt p{margin:0;font:12px/1.6 var(--mono);color:var(--graphite);background:#f3f4f5;padding:14px;user-select:all;white-space:pre-line}
+
+/* how to improve each act: the wall and the table, with their prompts */
+.guide{display:grid;gap:18px;border-top:1px solid var(--hair);padding-top:28px}
+.guide-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px}
+.guide-col{display:grid;gap:12px;align-content:start}
+.guide-col h4{margin:0;font:400 24px/1.1 var(--serif)}
+.guide-list{margin:0;padding:0 0 0 18px;display:grid;gap:8px;font-size:15px;line-height:1.5}
+.guide .prompt p{margin:0;font:12.5px/1.6 var(--mono);color:var(--graphite);background:#f3f4f5;padding:12px;user-select:all}
+@media (max-width:900px){.guide-cols{grid-template-columns:1fr}}
+
+/* What is for the team, not for the client: the notes, the council, the progress marks and the roteiro captions.
+   The presentation shows none of it; "Editar imagens" brings it all back. */
+body:not(.editing) .act .guide,body:not(.editing) .act .act-notes,body:not(.editing) .act .council,
+body:not(.editing) #conselho,body:not(.editing) .nav-now,
+body:not(.editing) .glance .g-marks,body:not(.editing) .glance .g-prog,body:not(.editing) .glance .g-gap,
+body:not(.editing) .pic figcaption{display:none}
+.editing .glance .g-uni{display:none}
+
+/* "Do deck para a sala": what the client's deck asks, and how the room answers it */
+.deck-why{margin:22px 0 4px;max-width:900px}
+.deck-why .block-title{margin-bottom:8px}
+.deck-why dl{margin:0;display:grid;gap:0}
+.why-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:6px 28px;padding:10px 0;border-top:1px solid var(--silver,#d9d9d9)}
+.why-row dt{color:var(--graphite,#555);font-size:14px;line-height:1.45}
+.why-row dt q{font-style:italic;quotes:"“" "”"}
+.why-slide{display:block;margin-top:3px;font-size:11.5px;letter-spacing:.04em;color:#8a8a8a}
+.why-row dd{margin:0;font-size:15px;line-height:1.45}
+@media (max-width:700px){.why-row{grid-template-columns:1fr}}
+/* what the frames do not show yet, in red */
+.brief-gap{margin:14px 0 6px;padding:10px 14px;border-left:3px solid #c62828;background:#fff6f6;font-size:14px;line-height:1.5;max-width:900px;color:#c62828}
+.brief-gap-t{margin:0 0 2px;font-weight:600}
+.brief-gap ul{margin:2px 0 0;padding-left:18px}
+.brief-gap li{margin:2px 0}
+
+/* "Estrutura da cena": the deck's five steps, each with the frame that does it; the ones without a frame in red */
+.scene{margin:26px 0 4px}
+.scene .block-title{margin-bottom:10px}
+.scene-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
+.scene-steps li{border-top:1px solid var(--ink,#1a1a1a);padding-top:10px}
+.scene-steps .scene-n{display:block;font-size:11.5px;color:#8a8a8a;margin-bottom:2px}
+.scene-steps strong{display:block;font-weight:600;font-size:15px;margin-bottom:4px}
+.scene-steps p{margin:0;font-size:14px;line-height:1.45;color:var(--graphite,#444)}
+.scene-steps li.missing{border-top-color:#c62828}
+.scene-steps li.missing strong,.scene-steps li.missing p{color:#c62828}
+@media (max-width:900px){.scene-steps{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.scene-steps{grid-template-columns:1fr}}
+
+/* the prompts of the red steps (edit mode) */
+.scene-prompts .prompt-ref{margin:4px 0 6px;font:13px/1.45 var(--sans);color:#c62828;background:none;padding:0;user-select:text}
+.scene-prompts p.master{white-space:pre-line}
+
+.scene-prompts .prompt-refbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:start;margin:6px 0 8px}
+.scene-prompts .prompt-refbox:not(:has(.prompt-refimg)){grid-template-columns:1fr}
+.prompt-refimg{display:block;border:2px solid #c62828}
+.prompt-refimg img{display:block;width:100%;height:auto}
+.prompt-refbox .btn{margin-top:6px;display:inline-block}
+@media (max-width:700px){.scene-prompts .prompt-refbox{grid-template-columns:1fr}}
+
+/* The old team notes are gone for good, also with "Editar imagens": only the image controls and the prompts of the
+   red steps stay in edit mode */
+.act .guide,.act .act-notes,.act .council,#conselho,.nav-now,.glance .g-marks,.glance .g-prog,.glance .g-gap{display:none!important}
+.editing .glance .g-uni{display:inline!important}
+
+/* the prompts of the red steps are always on (not only with "Editar imagens") */
+.editing .scene-prompts{display:grid!important}
+
+/* Black page: the whole presentation inverted (dark background, light type) */
+:root{--paper:#0b0b0c;--ink:#f1f1ef;--graphite:#a4a7ad;--silver:#55585e;--hair:#26272a;--accent:#4aa8e8;color-scheme:dark}
+.bar{background:rgba(11,11,12,.92)}
+.prompts p,.master-box .prompt p,.guide .prompt p{background:#17181a;color:#c9cbcf}
+.brief-gap{background:rgba(229,83,83,.10);border-left-color:#e55353;color:#ff8a80}
+.scene-steps li.missing{border-top-color:#e55353}
+.scene-steps li.missing strong,.scene-steps li.missing p,.scene-prompts .prompt-ref{color:#ff8a80}
+.prompt-refimg{border-color:#e55353}
+.why-slide,.scene-steps .scene-n{color:#7d8086}
+.minority{background:#141517}
+.pic.inverted .pic-text{color:#fff}
+
+/* no blue outline around the picture on show */
+.pic .pic-frame,.pic.active .pic-frame{outline:0!important}
+
+.scene-prompts .prompt-surf{margin:14px 0 0;font:600 15px/1.2 var(--sans);color:var(--ink);border-top:1px solid var(--hair);padding-top:12px}
+
+/* the Forma's place on Parede 02 and the wall export: edit mode only */
+.logo-ctl{display:none;flex-basis:100%;flex-wrap:wrap;align-items:center;gap:10px 18px;padding:10px 14px;border:1px solid var(--hair);border-radius:14px}
+.editing .logo-ctl{display:flex}
+.logo-ctl .lc-title{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--graphite)}
+.logo-ctl .lc-field{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--graphite)}
+.logo-ctl input[type=range]{width:140px;accent-color:var(--ink)}
+.logo-ctl .btn{font-size:13px}
+.logo-ctl .lc-export{margin-left:auto}
+@media (max-width:640px){.logo-ctl input[type=range]{width:100%}.logo-ctl .lc-field{flex-basis:100%}.logo-ctl .lc-export{margin-left:0}}
+
+/* ======================= Redesign (20/10): a presentation you scroll, one idea per screen =======================
+   Shape: pictures 14px, controls pill. Type: Times for every title, the sans for running text. One theme (dark). */
+:root{--r:14px;--white:#f2f0ec;--card:#141416}
+.act{width:100%;padding:0 0 clamp(96px,12vh,140px);border-top:0;gap:clamp(56px,8vh,88px)}
+.act>:not(.act-cover){width:var(--page);margin-inline:auto}
+.block-title,.surface h3{font:400 clamp(28px,2.6vw,40px)/1.1 var(--serif)}
+
+/* the cover of each act */
+.act-cover{position:relative;min-height:100dvh;display:grid;align-items:end;overflow:hidden;isolation:isolate}
+.cover-bg{position:absolute;inset:0;z-index:-1;background:#0d0d0f}
+.cover-bg img{width:100%;height:100%;object-fit:cover;object-position:62% 50%;transform:scale(1.05);transition:transform 2.6s cubic-bezier(.16,1,.3,1)}
+.cover-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,11,12,.35) 0%,rgba(11,11,12,.12) 38%,rgba(11,11,12,.55) 70%,rgba(11,11,12,.96) 100%)}
+.cover-title{width:var(--page);margin:0 auto;padding:0 0 clamp(56px,10vh,110px);display:grid;gap:16px}
+.cover-n{font:400 clamp(18px,1.5vw,22px)/1 var(--serif);color:rgba(242,240,236,.72);letter-spacing:.1em}
+.cover-name{margin:0;font:400 clamp(60px,9.5vw,156px)/.94 var(--serif);letter-spacing:-.015em;color:rgba(242,240,236,.14);
+  transition:color 1.8s cubic-bezier(.16,1,.3,1);text-wrap:balance}
+.cover-uni{margin:0;font:400 15px/1.4 var(--sans);color:rgba(242,240,236,.78)}
+.act-cover.lit .cover-name{color:var(--white)}
+.act-cover.lit .cover-bg img{transform:scale(1)}
+
+/* the room: the main piece */
+.stage{display:grid;gap:16px}
+.stage-box{border-radius:var(--r)}
+#room3d{border-radius:var(--r);overflow:hidden}
+
+/* the dish beside the idea of the act */
+.act-pair{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,5vw,88px);align-items:center}
+.act-pair:has(.dish[hidden]){grid-template-columns:minmax(0,1fr)}
+.act-pair .dish{display:grid;gap:14px;align-content:start}
+.act-pair .dish-photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;overflow:visible;padding:0}
+.act-pair .dish-photos figure{width:auto;max-width:none;margin:0}
+.act-pair .dish-photos img{width:100%;height:clamp(240px,30vw,460px);object-fit:cover;border-radius:var(--r);background:var(--card)}
+.act-pair .dish-photos figcaption{display:none}
+.act-pair .dish-text{margin:0;font:400 14px/1.5 var(--sans);color:var(--graphite);max-width:60ch}
+.idea-lead{margin:0;font:400 clamp(26px,2.4vw,36px)/1.22 var(--serif);color:var(--ink);max-width:24ch;text-wrap:pretty}
+.idea-quote{margin:32px 0 0;padding:2px 0 2px 18px;border-left:1px solid var(--hair);max-width:46ch}
+.idea-quote p{margin:0;font:italic 400 18px/1.45 var(--serif);color:var(--graphite)}
+.idea-quote cite{display:block;margin-top:10px;font:400 12px/1 var(--sans);color:var(--graphite);letter-spacing:.02em}
+
+/* the scene: five short cards, in order */
+.scene .block-title{margin:0 0 20px}
+.scene-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;list-style:none;margin:0;padding:0;border:0}
+.scene-steps li{background:var(--card);border:0;border-radius:var(--r);padding:20px 18px 24px;display:grid;align-content:start;gap:10px}
+.scene-steps .scene-n{font:400 13px/1 var(--sans);color:var(--graphite)}
+.scene-steps strong{font:400 22px/1.15 var(--serif);color:var(--ink)}
+.scene-steps p{margin:0;font:400 14px/1.5 var(--sans);color:var(--graphite)}
+
+/* pictures: rounder */
+.pic-frame{border-radius:var(--r);overflow:hidden}
+.more-thumbs img{border-radius:6px}
+.stage-pic{border-radius:var(--r)}
+.glance .g-pic img{border-radius:8px}
+
+/* the journey: pictures first, few words */
+.journey-head p{max-width:40ch}
+
+@media (max-width:1000px){.scene-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.act-pair{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.scene-steps{grid-template-columns:minmax(0,1fr)}.cover-name{font-size:clamp(48px,14vw,72px)}}
+@media (prefers-reduced-motion:reduce){.cover-name{color:var(--white);transition:none}.cover-bg img{transform:none;transition:none}}
+.act-pair .dish[hidden]{display:none}
+
+/* the cover, v2: the wall whole and sharp, as a panoramic band at its own proportion (never cropped or blown up),
+   the name of the act below it */
+.act-cover{min-height:100dvh;display:grid;align-content:center;align-items:initial;gap:clamp(28px,5vh,56px);padding:clamp(80px,10vh,120px) 0 clamp(40px,6vh,72px)}
+.cover-bg{position:relative;inset:auto;z-index:auto;width:100%;aspect-ratio:6410/1150;background:#0d0d0f;overflow:hidden}
+.cover-bg img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 50%;transform:none;opacity:0;transition:opacity 1.4s cubic-bezier(.16,1,.3,1)}
+.cover-bg::after{content:none}
+.act-cover.lit .cover-bg img{opacity:1;transform:none}
+.cover-title{padding:0;gap:12px}
+.cover-name{font-size:clamp(56px,8vw,132px)}
+@media (prefers-reduced-motion:reduce){.cover-bg img{opacity:1;transition:none}}
+
+/* the cover, v3: the name sits over the lower edge of the wall, the number and the universe in one quiet line */
+.act-cover{--nm:clamp(64px,9vw,152px);min-height:auto;align-content:start;gap:0;padding:clamp(96px,13vh,150px) 0 0}
+.cover-bg::after{content:"";position:absolute;left:0;right:0;bottom:0;height:55%;background:linear-gradient(180deg,rgba(11,11,12,0),rgba(11,11,12,.6))}
+.cover-title{position:relative;z-index:1;margin-top:calc(var(--nm) * -.62);display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:14px;align-items:baseline}
+.cover-name{grid-column:1/-1;grid-row:1;font-size:var(--nm);text-shadow:0 2px 28px rgba(0,0,0,.35)}
+.cover-n{grid-row:2;grid-column:1;font:400 17px/1 var(--serif);letter-spacing:.06em;color:rgba(242,240,236,.7)}
+.cover-uni{grid-row:2;grid-column:2;font-size:15px}
+.act{padding-bottom:clamp(56px,8vh,96px);gap:clamp(48px,7vh,80px)}
+
+/* more pictures of the act: a few small thumbnails, no pill */
+.images .more{border:0;background:none;padding:4px 0;gap:12px;border-radius:0}
+.images .more-thumbs img{height:40px;width:auto;border-radius:8px}
+.images .more-n{font:400 20px/1 var(--serif)}
+.cover-bg::after{content:none}
+.cover-title{margin-top:calc(var(--nm) * -.58);row-gap:18px}
+.cover-name{text-shadow:0 2px 24px rgba(0,0,0,.5),0 0 2px rgba(0,0,0,.25)}
+.act-cover+.stage{margin-top:calc(clamp(48px,7vh,80px) * -.25)}
+:root{--r:6px}
+.more-thumbs img,.images .more-thumbs img{border-radius:3px}
+.glance .g-pic img{border-radius:4px}
+
+/* the Forma turning behind the act's name (one canvas, moved to the cover on screen) */
+.cover-forma{position:absolute;z-index:-1;left:clamp(-40px,-2vw,-12px);top:50%;width:clamp(260px,36vw,600px);aspect-ratio:1;transform:translateY(-62%);pointer-events:none;
+  opacity:0;transition:opacity 1.2s cubic-bezier(.16,1,.3,1)}
+.act-cover.lit .cover-forma{opacity:1}
+/* the dish: up to three photos in one row */
+.act-pair .dish-photos{grid-template-columns:repeat(var(--n,3),minmax(0,1fr))}
+/* the Forma behind the name, v2: centred on the name, whole (not clipped), a little room below the cover */
+.act-cover{overflow:visible;padding-bottom:clamp(40px,7vh,90px)}
+.cover-forma{left:clamp(0px,3vw,48px);top:42%;width:clamp(220px,25vw,420px);transform:translateY(-50%)}
+/* the 3D room's top edge draws a thin line: keep it off */
+#room3d,.stage-box>img.snap{clip-path:inset(3px 0 0 0 round var(--r))}
+.stage-box{background:transparent}
+
+/* the cover, v4: white around the wall; the name and its line sit inside the wall, at its lower left */
+.act-cover{background:#f6f5f2;display:grid;grid-template-areas:"band";align-content:center;padding:clamp(80px,12vh,140px) 0 clamp(64px,10vh,120px);gap:0}
+.act-cover>.cover-bg{grid-area:band}
+.act-cover>.cover-title{grid-area:band;align-self:end;justify-self:center;margin:0;padding-bottom:clamp(18px,2.6vw,40px)}
+.cover-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.42) 100%);pointer-events:none}
+.cover-name{color:rgba(255,255,255,.2)}
+.act-cover.lit .cover-name{color:#fff}
+.cover-n,.cover-uni{color:rgba(255,255,255,.88);text-shadow:0 1px 10px rgba(0,0,0,.35)}
+.cover-forma{top:55%}
+@media (prefers-reduced-motion:reduce){.cover-name{color:#fff}}
+.cover-bg::after{height:auto;top:0;bottom:0;left:0;right:0}
+
+/* the cover, v5: white, the wall whole, and only the act's name, centred below it in black Times italic */
+.act-cover{display:grid;grid-template-areas:none;align-content:center;justify-items:center;gap:clamp(28px,5vh,56px)}
+.act-cover>.cover-bg,.act-cover>.cover-title{grid-area:auto}
+.cover-bg::after{content:none}
+.act-cover>.cover-title{align-self:auto;justify-self:center;width:var(--page);padding:0;display:block;text-align:center}
+.cover-n,.cover-uni,.cover-forma{display:none}
+.cover-name,.act-cover.lit .cover-name{font-style:italic;color:#111113;text-shadow:none;text-align:center;font-size:clamp(52px,7vw,120px);line-height:1}
+.cover-name{opacity:0;transition:opacity 1.4s cubic-bezier(.16,1,.3,1)}
+.act-cover.lit .cover-name{opacity:1}
+@media (prefers-reduced-motion:reduce){.cover-name{opacity:1;transition:none}}
+
+/* ========== Slides: every part of the page is one full screen, its content centred (like a deck) ========== */
+/* no snapping: with it the wheel's small steps were pulled back to the start of the screen and the page would not go on
+   (the arrow keys, PageUp/PageDown and the space bar still go screen by screen) */
+html{scroll-snap-type:none}
+#topo,#jornada,.glance,.act-cover,.act .stage,.act-pair,.slide-scene{min-height:100dvh;box-sizing:border-box;scroll-snap-align:start;scroll-margin-top:0}
+.act{gap:0;padding:0;border-top:0}
+.act>:not(.act-cover){padding-block:calc(64px + clamp(20px,4vh,48px)) clamp(24px,5vh,56px)}   /* 64px: the bar on top */
+/* cover */
+.act-cover{padding:64px 0 0;align-content:center;gap:clamp(32px,6vh,72px)}
+.cover-name,.act-cover.lit .cover-name{font-size:clamp(64px,8.6vw,150px)}
+/* the room: as big as the screen allows, the controls below it */
+.act .stage{display:grid;grid-template-rows:1fr auto;align-content:stretch;gap:14px}
+.act .stage-box{aspect-ratio:auto;max-height:none;height:auto;min-height:0}
+/* the dish and its idea */
+.act-pair{align-content:center}
+.act-pair .dish-photos img{height:clamp(320px,calc(100dvh - 330px),720px)}
+/* the scene and the pictures */
+.slide-scene{display:grid;align-content:center;gap:clamp(32px,6vh,64px)}
+.slide-scene .scene-steps li{min-height:clamp(150px,20vh,230px)}
+/* the opening screens */
+#jornada,.glance{display:grid;align-content:center}
+.glance ol{margin-block:0}
+body:not(.editing) .scene-prompts{display:none!important}
+.idea-lead{font-size:clamp(30px,2.9vw,46px);max-width:22ch}
+#jornada .stage-pic{aspect-ratio:3/4}
+
+/* "Ajustar Forma" (edit mode only): a button below the room that opens the panel */
+.logo-ctl{display:none;flex-basis:100%;border:0;padding:0;flex-direction:column;align-items:flex-start;gap:12px}
+.editing .logo-ctl{display:flex}
+.lc-panel{width:100%;display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px;padding:16px 20px;border:1px solid var(--hair);border-radius:var(--r);background:var(--card)}
+.lc-panel[hidden]{display:none}
+.lc-panel .lc-field{display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--graphite)}
+.lc-panel input[type=range]{width:170px;accent-color:var(--ink)}
+.lc-panel .lc-val{min-width:3ch;font:400 12px/1 var(--mono);color:var(--ink)}
+.lc-actions{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.lc-save{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+@media (max-width:640px){.lc-panel .lc-field{flex-basis:100%}.lc-panel input[type=range]{flex:1}.lc-actions{margin-left:0}}
+
+/* the cover, v6: only the act's name, upright Times, in the middle of the screen; graphite, not pure black */
+.act-cover>.cover-bg{display:none}
+.act-cover{display:grid;place-items:center;align-content:center;padding:64px 0 0;gap:0}
+.act-cover>.cover-title{align-self:center;justify-self:center}
+.cover-name,.act-cover.lit .cover-name{font-style:normal;color:#2b2b2e;font-size:clamp(64px,9vw,160px);letter-spacing:-.01em}
+
+/* ===== grids, second pass ===== */
+/* the dish: one large photo and two stacked beside it (or two side by side, or one wide), all one height */
+.act-pair{--ph:clamp(320px,calc(100dvh - 330px),720px);grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+.act-pair .dish-photos{height:var(--ph);grid-auto-rows:minmax(0,1fr)}
+.act-pair .dish-photos figure{height:100%;min-height:0}
+.act-pair .dish-photos img{height:100%!important}
+.act-pair .dish-photos[data-n="3"]{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);grid-template-rows:repeat(2,minmax(0,1fr))}
+.act-pair .dish-photos[data-n="3"] figure:first-child{grid-row:1 / 3}
+.act-pair .dish-photos[data-n="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+.act-pair .dish-photos[data-n="1"]{grid-template-columns:minmax(0,1fr)}
+/* the seven acts: number and name in Times, the universe as quiet text, the picture aligned right */
+.glance ol{margin-top:clamp(24px,4vh,40px);gap:0}
+.glance a{grid-template-columns:56px minmax(0,1fr) minmax(0,1.2fr) minmax(200px,300px);gap:24px;padding:12px 0}
+.glance .g-n{font:400 26px/1 var(--serif);color:var(--graphite)}
+.glance .g-name{font:400 clamp(21px,1.7vw,27px)/1.15 var(--serif);color:var(--ink)}
+.glance .g-dish{font:400 14px/1.45 var(--sans);color:var(--graphite)}
+.glance .g-pic{display:block}
+.glance .g-pic img{display:block;width:100%;height:52px;object-fit:cover}
+/* the journey's act line: the page's sans, not mono */
+.stage-acts{font:400 12.5px/1.4 var(--sans);color:var(--graphite)}
+@media (max-width:900px){.act-pair .dish-photos{height:auto}.act-pair .dish-photos[data-n="3"]{grid-template-rows:none}.act-pair .dish-photos img{height:clamp(220px,60vw,420px)!important}}
+.act-pair .dish-photos figure{display:block}
+/* export, per picture and all of the act's walls (local only) */
+.pic figcaption .pic-export{margin-left:auto}
+.img-head .pic-export-all{margin-left:auto}
+body:not(.editing) .pic figcaption{display:flex;justify-content:flex-end}
+body:not(.editing) .pic figcaption>:not(.pic-export){display:none}
+.pic .pic-frame img.pic-refl{position:absolute;height:auto;max-width:none;transform:translateX(-50%);pointer-events:none}
+/* a table that is a video (the TouchDesigner salad table) plays in its preview like a picture */
+.pic-frame video{display:block;width:100%;object-fit:cover;background:#000}
+.pic.table video{aspect-ratio:2682/540}
+/* the phase of the music the tables follow (the Salada) */
+.player .p-fase{font-size:.92em;color:var(--graphite,#8a8a8f)}
+.player .p-fase::before{content:' · '}
+.player .p-fase:empty{display:none}
+
+/* ===== taste v3: the overview screens and the grids ===== */
+/* the journey: seven tall pictures in one row on any desktop, the caption under each on a hairline */
+.stages{grid-template-columns:repeat(7,minmax(0,1fr));gap:0 clamp(10px,1.2vw,20px)}
+#jornada .stage-pic{aspect-ratio:auto;height:clamp(240px,calc(100dvh - 470px),560px);border-radius:var(--r)}
+#jornada .stage-pic img{transition:transform .9s cubic-bezier(.16,1,.3,1),filter .9s}
+#jornada .stages>li:hover .stage-pic img{transform:scale(1.04)}
+#jornada .stages h3{font-size:clamp(16px,1.35vw,21px)}
+#jornada .stage-acts{padding-top:8px;border-top:1px solid var(--hair)}
+@media (max-width:1300px){.stages{grid-template-columns:repeat(7,minmax(0,1fr))}}
+@media (max-width:1000px){.stages{grid-template-columns:repeat(4,minmax(0,1fr))}#jornada .stage-pic{height:clamp(220px,38vh,360px)}}
+@media (max-width:640px){.stages{grid-template-columns:repeat(2,minmax(0,1fr))}#jornada .stage-pic{height:auto;aspect-ratio:3/4}}
+/* the seven acts: one row each, number | name over its universe | the act's wall, wide, filling the screen evenly */
+.glance ol{--gh:clamp(56px,calc((100dvh - 330px) / 7 - 14px),118px)}
+.glance li{border-top:1px solid var(--hair)}
+.glance li:last-child{border-bottom:1px solid var(--hair)}
+.glance a{grid-template-columns:clamp(40px,4vw,64px) minmax(0,1fr) minmax(0,1.5fr);grid-template-areas:"n name pic" "n uni pic";column-gap:clamp(16px,2.4vw,40px);row-gap:4px;padding:7px 0;align-items:center}
+.glance .g-n{grid-area:n}
+.glance a>span:nth-child(2){grid-area:name;align-self:end}
+.glance .g-uni{grid-area:uni;align-self:start}
+.glance .g-gap{grid-area:uni}
+.glance .g-pic{grid-area:pic;aspect-ratio:auto;background:none}
+.glance .g-pic img{height:var(--gh);border-radius:var(--r);transition:filter .5s,transform .7s cubic-bezier(.16,1,.3,1);filter:brightness(.86)}
+.glance a:hover .g-pic img,.glance a:focus-visible .g-pic img{filter:none}
+.glance a:hover .g-name{color:var(--accent)}
+@media (max-width:760px){.glance a{grid-template-columns:40px minmax(0,1fr);grid-template-areas:"n name" "n uni" "pic pic"}.glance .g-pic img{height:clamp(64px,22vw,110px)}}
+/* the Recepção's first slide: its wall beside the sentence */
+.act-pair .dish-wall{margin:0;height:var(--ph)}
+.act-pair .dish-wall img{width:100%;height:100%;object-fit:cover;border-radius:var(--r);display:block}
+@media (max-width:900px){.act-pair .dish-wall{height:clamp(220px,60vw,420px)}}
+/* the scene: a quiet timeline, a hairline and a number, not five boxes */
+.scene-steps{gap:0 clamp(16px,2vw,32px)}
+.scene-steps li{background:none;border-radius:0;border-top:1px solid var(--hair);padding:18px 0 8px;position:relative}
+.scene-steps li::before{content:'';position:absolute;top:-4px;left:0;width:7px;height:7px;border-radius:50%;background:var(--ink)}
+.scene-steps .scene-n{font:400 italic 15px/1 var(--serif);color:var(--graphite)}
+.scene-steps strong{font-size:clamp(19px,1.6vw,24px)}
+.slide-scene .scene-steps li{min-height:0}
+.scene-steps li.missing{border-top-color:var(--hair)}
+.scene-steps li.missing::before{background:#e55353}
+/* one radius on every picture */
+.stage-box,#room3d,.pic-frame,.pic-frame img,.pic-frame video,.act-pair .dish-photos img{border-radius:var(--r)}
+@media (prefers-reduced-motion:reduce){#jornada .stage-pic img,.glance .g-pic img{transition:none}}
+/* the other pictures of the act under the big one: each whole (a wall is 5.6 : 1, a table 5 : 1), in a row, then the count */
+.img-list>.more{display:flex;align-items:center;gap:18px;width:100%;padding:14px 0 0;border:0;border-top:1px solid var(--hair);border-radius:0;background:none;cursor:pointer;color:var(--graphite)}
+.img-list>.more .more-thumbs{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(150px,16vw,250px);gap:10px;overflow:hidden;flex:0 1 auto}
+.img-list>.more .more-thumbs img{width:100%;height:auto;aspect-ratio:6410/1150;object-fit:cover;border-radius:4px;border:0;margin:0;opacity:.85;transition:opacity .3s}
+.pic.table~.more .more-thumbs img,.images[data-kind="tables"] .more-thumbs img{aspect-ratio:2682/540}
+.img-list>.more:hover .more-thumbs img{opacity:1}
+.img-list>.more .more-n{font:400 26px/1 var(--serif);color:var(--ink)}
+.img-list>.more .more-t{font-size:14px}
+
+/* ===== v7: the opening, the overview and the act covers, led by the walls like the room below them =====
+   White where the picture appears (the covers), the dark of the room everywhere else; Times; one radius. */
+#jornada{display:none!important}            /* the overview is "Os 7 atos": one screen, not two */
+#topo.cover{width:100%;margin:0;background:#fff;color:#111113;display:grid;align-content:center;justify-items:center;gap:clamp(22px,4vh,44px);padding:calc(64px + 5vh) 0 6vh}
+#topo h1{width:var(--page);margin:0;text-align:center;color:#111113;font:400 clamp(30px,4.4vw,74px)/1.05 var(--serif);letter-spacing:.16em}
+#topo .cover-band{width:var(--page);aspect-ratio:3.6/1;margin:0;border-radius:var(--r);overflow:hidden;background:#f1f1f1}
+#topo .cover-band img{display:block;width:100%;height:100%;object-fit:cover}
+#topo .lede{margin:0;text-align:center;color:#6b6e74;font:400 italic clamp(17px,1.4vw,22px)/1.4 var(--serif)}
+/* "Os 7 atos": the seven walls stacked like the dinner's filmstrip, each with its number and name on it */
+.glance{align-content:center}
+.glance h2{margin:0 0 clamp(16px,3vh,28px)}
+.glance ol{--gh:clamp(64px,calc((100dvh - 64px - 170px) / 7 - 8px),132px);display:grid;gap:8px;margin:0}
+.glance li,.glance li:last-child{border:0}
+.glance a{position:relative;display:flex;align-items:center;gap:clamp(14px,2vw,28px);height:var(--gh);padding:0 clamp(18px,2.4vw,36px);border-radius:var(--r);overflow:hidden;isolation:isolate;color:#fff;text-decoration:none}
+.glance .g-pic{position:absolute;inset:0;z-index:-1;aspect-ratio:auto;background:#111}
+.glance .g-pic img{width:100%;height:100%!important;object-fit:cover;object-position:50% 55%;border-radius:0;filter:brightness(.78);transition:filter .5s,transform 1.2s cubic-bezier(.16,1,.3,1)}
+.glance .g-pic::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.1) 45%,rgba(0,0,0,0) 70%)}
+.glance a:hover .g-pic img,.glance a:focus-visible .g-pic img{filter:brightness(.95);transform:scale(1.015)}
+.glance .g-n{width:2.6em;color:rgba(255,255,255,.75);font:400 clamp(18px,1.5vw,24px)/1 var(--serif)}
+.glance .g-name,.glance a:hover .g-name{color:#fff;font:400 clamp(22px,2vw,32px)/1 var(--serif);text-decoration:none}
+.glance .g-uni{margin-left:auto;color:rgba(255,255,255,.82);font:400 italic clamp(13px,1vw,15px)/1.3 var(--serif);text-align:right;text-shadow:0 1px 8px rgba(0,0,0,.4)}
+@media (max-width:760px){.glance a{flex-wrap:wrap;align-content:center;row-gap:4px}.glance .g-uni{margin-left:0;width:100%;text-align:left}}
+/* "Os 7 atos", second pass: each wall whole (its Forma where the room shows it), two by two, the number and the name on it */
+.glance ol{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.glance li:last-child:nth-child(odd){grid-column:1/-1;justify-self:center;width:calc(50% - 6px)}
+.glance a{height:auto;aspect-ratio:6410/1150;align-items:flex-end;padding:0 18px 12px}
+.glance a>*{align-self:auto}
+.glance .g-pic img{object-position:50% 50%;filter:brightness(.88)}
+.glance .g-pic::after{background:linear-gradient(0deg,rgba(0,0,0,.55),rgba(0,0,0,0) 55%)}
+.glance a>span:nth-child(2){align-self:auto}
+.glance .g-n{width:auto;font-size:clamp(15px,1.15vw,18px)}
+.glance .g-name,.glance a:hover .g-name{font-size:clamp(18px,1.55vw,24px)}
+.glance .g-uni{display:none}
+@media (max-width:760px){.glance ol{grid-template-columns:minmax(0,1fr)}.glance li:last-child:nth-child(odd){width:100%}}
+.glance .g-pic::after{background:linear-gradient(0deg,rgba(0,0,0,.34),rgba(0,0,0,0) 50%)}
+.glance .g-pic img{filter:none}
+.glance .g-n,.glance .g-name{text-shadow:0 1px 3px rgba(0,0,0,.55),0 0 18px rgba(0,0,0,.35)}
+/* the Recepção's first slide: only the Forma, in 3D, turning on the dark of the room */
+.act-pair .dish-forma{margin:0;height:var(--ph);border-radius:var(--r);overflow:hidden;background:radial-gradient(60% 60% at 50% 45%,#1d1e21,#0b0b0c 75%)}
+.act-pair .dish-forma canvas.cover-forma{position:static;display:block;width:100%;height:100%;transform:none;opacity:1;left:auto;top:auto;z-index:auto}
+@media (max-width:900px){.act-pair .dish-forma{height:clamp(260px,70vw,460px)}}
+.act-pair .dish-forma{display:grid;place-items:center;background:none}
+.act-pair .dish-forma img{width:auto;height:92%;max-width:100%;object-fit:contain;border-radius:0;background:none;filter:drop-shadow(0 24px 40px rgba(0,0,0,.45))}
+/* the opening, v8: only the title, centred, the Forma standing behind it */
+#topo.cover{position:relative;place-items:center;align-content:center;overflow:hidden;isolation:isolate}
+#topo .cover-forma-bg{position:absolute;inset:0;z-index:-1;margin:0;display:grid;place-items:center;pointer-events:none}
+#topo .cover-forma-bg img{width:auto;height:min(78dvh,860px);max-width:92vw;object-fit:contain;opacity:.92}
+#topo h1{position:relative;font-size:clamp(30px,4.6vw,80px);text-shadow:0 0 28px #fff,0 0 12px #fff}
+#topo .cover-band,#topo .lede{display:none}
+/* "Os 7 atos", third pass: the Recepção (it opens the night) across the whole width, the six others two by two */
+.glance li:last-child:nth-child(odd){grid-column:auto;justify-self:stretch;width:auto}
+.glance li:first-child{grid-column:1/-1}
+.glance li:first-child a{aspect-ratio:6410/1150}
+.glance li:first-child .g-pic::after{background:none}
+.glance li:first-child .g-n,.glance li:first-child .g-name{color:#141416;text-shadow:none}
+.glance ol{--gtop:auto}
+/* the arrows over the 3D room: previous / next visual */
+.stage-box{position:relative}
+.room-arrow{position:absolute;top:50%;z-index:6;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;display:grid;place-items:center;padding:0;
+  border:1px solid rgba(255,255,255,.28);background:rgba(10,10,12,.42);backdrop-filter:blur(8px);color:#fff;cursor:pointer;opacity:.78;transition:opacity .2s,background .2s}
+.room-arrow.prev{left:14px}.room-arrow.next{right:14px}
+.room-arrow:hover,.room-arrow:focus-visible{opacity:1;background:rgba(10,10,12,.62)}
+.room-arrow:active{transform:translateY(-50%) scale(.96)}
+.room-arrow svg{width:22px;height:22px}
+@media print{.room-arrow{display:none}}
+/* the bar: plain black, no name */
+.bar,#topo~*.bar{background:#000;border-bottom:0;backdrop-filter:none}
+.bar .brand{min-width:1px}
+
+
+/* the opening: the Forma (its chrome render) turning slowly in its own plane behind the title, and floating a little.
+   It turns facing the guest only: its two strips close into a ring only seen from the front */
+#topo .cover-forma-bg{animation:forma-flutua 9s ease-in-out infinite alternate}
+@keyframes forma-gira{to{transform:rotate(360deg)}}
+@keyframes forma-flutua{from{transform:translateY(-7px)}to{transform:translateY(7px)}}
+/* (a turn in 75 s is calm enough to keep even when the system asks for less motion; only the floating stops) */
+@media (prefers-reduced-motion:reduce){#topo .cover-forma-bg{animation:none}}
+
+/* smooth scrolling (Lenis): the page's own smooth behaviour off, Lenis does it */
+html.lenis,html.lenis body{height:auto}
+html.lenis{scroll-behavior:auto}
+.lenis.lenis-stopped{overflow:clip}
+/* the opening stays while the overview of the acts comes up over it, like a card */
+#topo.cover{position:sticky;top:0;z-index:0}
+#topo~.glance{position:relative;z-index:1;background:#0b0b0c;border-radius:28px 28px 0 0;box-shadow:0 -24px 60px rgba(0,0,0,.28);
+  width:100%;max-width:none;margin-inline:0;padding-inline:max(24px,calc((100% - 1400px) / 2))}   /* the whole width, its content where it was */
+@media (prefers-reduced-motion:reduce){#topo.cover{position:relative}}
+
+/* the opening: the turning Forma (a video) takes the place of its first frame once it plays */
+#topo .cover-forma-bg video.cover-forma{display:none;position:static;transform:none;left:auto;top:auto;z-index:auto;width:auto;height:min(78dvh,860px);aspect-ratio:1;max-width:92vw;object-fit:contain;opacity:.92}
+#topo .cover-forma-bg.vivo video.cover-forma{display:block}
+#topo .cover-forma-bg.vivo img{display:none}
+
+/* every screen of an act is a card: it stays (sticky) while the next one comes up over it, with rounded top corners.
+   A screen taller than the window stays only once its end is in view (apresentacao.js sets its top) */
+.act>.act-cover,.act>.act-pair,.act>.stage,.act>.slide-scene{position:sticky;top:0}
+.act>.act-pair,.act>.stage,.act>.slide-scene{background:#0b0b0c;border-radius:28px 28px 0 0;box-shadow:0 -24px 60px rgba(0,0,0,.35);
+  width:100%;max-width:none;margin-inline:0;padding-inline:calc((100% - var(--page)) / 2)}   /* the whole width, its content where it was */
+html.sem-cartoes .act>.act-cover,html.sem-cartoes .act>.act-pair,html.sem-cartoes .act>.stage,html.sem-cartoes .act>.slide-scene,html.sem-cartoes #topo.cover{position:relative!important;top:auto!important}
+
+/* the act covers (white) are cards too: each comes up over the last screen of the act before (and the first over the
+   overview), which stays meanwhile. The group before it runs one window longer so its last card can stay, and the act
+   starts one window earlier so nothing moves in the page */
+main>.capa-pilha::after,main>.act:not(:last-of-type)::after{content:"";display:block;height:100dvh;pointer-events:none}   /* (content, not padding: a sticky card stops at its group's padding) */
+main>.act{margin-top:-100dvh}
+#topo~.glance{position:sticky;top:0;z-index:auto}
+.act>.act-cover{border-radius:28px 28px 0 0;box-shadow:0 -24px 60px rgba(0,0,0,.35)}
+html.sem-cartoes #topo~.glance{position:relative!important;top:auto!important}
+
+/* the cards' grids: one column the width of the window (a long line inside never widens the page), every grid and flex
+   child free to shrink */
+.act{grid-template-columns:minmax(0,1fr)}
+.act>*,.act-pair>*,.stage>*,.slide-scene>*,.scene>*,.images>*,.img-list>*,.stage-tools>*,.player>*{min-width:0}
+.img-list>.more .more-thumbs{min-width:0}
+.player .p-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html,body{overflow-x:clip}   /* (clip, not hidden: the sticky cards keep the page as their scroller) */
+
+/* the overview: the same side margins as every card, and the whole grid in one window (the Recepção band shorter, so
+   its row weighs like two of the others, not three) */
+#topo~.glance{padding-inline:calc((100% - var(--page)) / 2);padding-block:calc(64px + clamp(16px,3vh,40px)) clamp(16px,3vh,40px)}
+.glance li:first-child a{aspect-ratio:9/1}
+@media (max-height:820px) and (min-width:761px){.glance ol{width:min(100%,calc((100dvh - 64px - 150px) * 2.6));margin-inline:auto}}
+
+/* the bar on small screens: the acts stay (they are how one moves on a phone), the button on the right */
+@media (max-width:1000px){.acts-nav{display:flex}.acts-nav a{padding:8px 6px;font-size:15px}.bar{gap:12px}}
+@media (max-width:480px){.acts-nav{gap:0}.acts-nav a{padding:8px 4px;font-size:14px}.bar .brand{display:none}.bar>:last-child{margin-left:auto}}
+
+/* the dish and its idea: side by side on wide screens, the text column as wide as its line; one above the other below
+   1000px (an earlier rule kept two columns at every width) */
+.act-pair{column-gap:clamp(40px,6vw,104px)}
+.act-pair .idea-lead{max-width:20ch}
+@media (max-width:1000px){
+  .act-pair{grid-template-columns:minmax(0,1fr);align-content:center;row-gap:clamp(24px,4vh,40px)}
+  .act-pair .idea-lead{max-width:none;font-size:clamp(24px,6.4vw,34px)}
+}
+
+/* the scene's five steps: five across, then three and two, then two by two; never one long column */
+@media (max-width:1000px){.scene-steps{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){.scene-steps{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px}.scene-steps li:last-child:nth-child(odd){grid-column:1/-1}}
+
+/* the room on a phone: its box takes the card's height instead of floating in the middle of it */
+@media (max-width:760px){.act .stage{grid-template-rows:minmax(0,1fr) auto}.act .stage .stage-box{min-height:52dvh}}
+
+/* three dish photos below 900px: the first across the whole width, the other two side by side under it (the tall
+   first photo of the wide layout left a hole beside the third) */
+@media (max-width:900px){
+  .act-pair .dish-photos[data-n="3"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .act-pair .dish-photos[data-n="3"] figure:first-child{grid-row:auto;grid-column:1/-1}
+  .act-pair .dish-photos[data-n="3"] img{height:clamp(140px,32vw,300px)!important}
+  .act-pair .dish-photos[data-n="3"] figure:first-child img{height:clamp(180px,44vw,380px)!important}
+}
+/* a tablet held upright: the acts one per row (two per row made each band a thin strip) */
+@media (max-width:1100px) and (orientation:portrait){.glance ol{grid-template-columns:minmax(0,1fr)}.glance li:first-child a{aspect-ratio:6410/1150}}
+
+/* "Os 7 atos" as a menu: one row per act, all alike. The numeral in its own column, the name with its universe under
+   it, the wall's band on the right; hairlines between the rows. The whole list fits one window */
+#topo~.glance ol{--gh:clamp(56px,calc((100dvh - 64px - 200px) / 7 - 14px),118px);display:grid;grid-template-columns:minmax(0,1fr);gap:0;width:auto;margin:0;border-top:1px solid rgba(255,255,255,.12)}
+#topo~.glance li,#topo~.glance li:first-child,#topo~.glance li:last-child{grid-column:auto;width:auto;justify-self:stretch;border:0;border-bottom:1px solid rgba(255,255,255,.12)}
+#topo~.glance li a,#topo~.glance li:first-child a{display:grid;grid-template-columns:clamp(32px,2.6vw,52px) minmax(0,1fr) minmax(0,1.9fr);grid-template-areas:"n name pic" "n uni pic";
+  column-gap:clamp(16px,2.4vw,40px);row-gap:6px;align-items:center;height:auto;aspect-ratio:auto;padding:7px 0;border-radius:0;overflow:visible;color:#fff;position:relative}
+#topo~.glance .g-n,#topo~.glance li:first-child .g-n{grid-area:n;align-self:center;width:auto;color:rgba(255,255,255,.45);font:400 clamp(16px,1.3vw,21px)/1 var(--serif);text-shadow:none;letter-spacing:.04em}
+#topo~.glance a>span:nth-child(2){grid-area:name;align-self:end}
+#topo~.glance .g-name,#topo~.glance a:hover .g-name,#topo~.glance li:first-child .g-name{color:#fff;font:400 clamp(20px,1.8vw,30px)/1.1 var(--serif);text-shadow:none;transition:color .3s}
+#topo~.glance .g-uni{display:block;grid-area:uni;align-self:start;margin:0;width:auto;text-align:left;color:rgba(255,255,255,.55);font:400 italic clamp(13px,.95vw,15px)/1.35 var(--serif);text-shadow:none}
+#topo~.glance .g-pic,#topo~.glance li:first-child .g-pic{grid-area:pic;position:relative;inset:auto;z-index:auto;display:block;height:var(--gh);border-radius:4px;overflow:hidden;background:#151517}
+#topo~.glance .g-pic::after,#topo~.glance li:first-child .g-pic::after{content:none}
+#topo~.glance .g-pic img{width:100%;height:100%!important;object-fit:cover;object-position:50% 50%;border-radius:0;filter:brightness(.82);transform:none;transition:filter .5s,transform 1.2s cubic-bezier(.16,1,.3,1)}
+#topo~.glance a:hover .g-pic img,#topo~.glance a:focus-visible .g-pic img{filter:none;transform:scale(1.02)}
+#topo~.glance a:hover .g-n{color:#fff}
+#topo~.glance li:first-child .g-pic img{filter:none;object-position:50% 30%}   /* the white opening wall: its title and the Forma, not grey */
+@media (max-width:760px){
+  #topo~.glance li a,#topo~.glance li:first-child a{grid-template-columns:28px minmax(0,1fr) minmax(0,1.1fr);column-gap:12px;padding:6px 0}
+  #topo~.glance ol{--gh:clamp(48px,calc((100dvh - 64px - 170px) / 7 - 12px),90px)}
+  #topo~.glance .g-uni{display:none}
+  #topo~.glance a>span:nth-child(2){align-self:center;grid-row:1 / 3}
+  #topo~.glance .g-name{font-size:clamp(17px,4.6vw,22px)}
+}
+@media (max-height:820px) and (min-width:761px){.glance ol{width:auto}}
+@media (max-width:760px){#topo~.glance .g-pic img,#topo~.glance li:first-child .g-pic img{object-position:79% 45%}}   /* a phone shows the part of each wall with its Forma */
+/* a wall that is a video: its preview has the wall's shape whatever the video's (cropped like the room crops it) */
+.pic.wall .pic-frame video{aspect-ratio:6410/1150;height:auto}
+
+/* the opening, v9: the chrome Forma of the white wall's video (guias-formato-sala/forma_capa.py), turning as on the wall;
+   its white is the page's white */
+#topo .cover-forma-bg img,#topo .cover-forma-bg video.cover-forma{opacity:1;mix-blend-mode:multiply}
+/* the opening's Forma a little smaller: the source video is soft, enlarged to the whole height it showed */
+#topo .cover-forma-bg img,#topo .cover-forma-bg video.cover-forma{height:min(64dvh,700px)}
+/* an act's wall or table made for its whole track: the video itself in the pictures' section */
+.track-pic .pic-frame{cursor:default}
+.track-pic video{display:block;width:100%;height:auto}
+.track-cap{font-size:13px;opacity:.6}
+/* the opening's Forma: the gel ring (videos-gerados/2026-10-28-logo-gel-girando-final.mp4) in black and white, sharp:
+   back to a larger size */
+#topo .cover-forma-bg img,#topo .cover-forma-bg video.cover-forma{height:min(76dvh,840px)}
+/* the opening's video: its white comes out of the browser's video decoding one step below the page's white (254), which
+   shows the video's square; a touch brighter puts it back to pure white (the chrome barely changes) */
+#topo .cover-forma-bg video.cover-forma{filter:brightness(1.02)}
+/* the opening's title: no white glow; white set in "difference", so it reads black on the white page and inverts where
+   the logo passes behind it */
+#topo h1{color:#fff;text-shadow:none;mix-blend-mode:difference}
+
+/* the overview: each act's 30 s of wall in video, over its picture once it plays (same framing and tone as the picture) */
+#topo~.glance .g-pic video.g-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;opacity:0;filter:brightness(.82);transition:opacity .6s,filter .5s,transform 1.2s cubic-bezier(.16,1,.3,1)}
+#topo~.glance .g-pic video.g-vid.on{opacity:1}
+#topo~.glance a:hover .g-pic video.g-vid,#topo~.glance a:focus-visible .g-pic video.g-vid{filter:none;transform:scale(1.02)}
+#topo~.glance li:first-child .g-pic video.g-vid{filter:none;object-position:50% 30%}
+@media (max-width:760px){#topo~.glance .g-pic video.g-vid{object-position:79% 45%}}
+/* (they play even when the system asks for less motion, as the opening's Forma does: asked for) */
+
+/* the room loading: under the room's frame, seen only while the room is not over its box (it covers this once drawn) */
+.stage-box .wait{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:18px;font:400 12px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:#a7a9ae;pointer-events:none}
+.stage-box .wait-ring{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.14);border-top-color:#ecedef;animation:wait-gira 1.1s linear infinite}
+@keyframes wait-gira{to{transform:rotate(360deg)}}
+@keyframes wait-pulsa{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.stage-box .wait-ring{animation:wait-pulsa 2.4s ease-in-out infinite}}
+
+/* versão do cliente */
+#edit-toggle,.scene-prompts,.brief-gap,.scene-steps li.missing,.pic figcaption .tools,.add,.local-only,.logo-ctl{display:none!important}

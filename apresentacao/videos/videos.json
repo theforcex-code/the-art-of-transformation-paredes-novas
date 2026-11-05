@@ -1,0 +1,75 @@
+{
+ "segundo": {
+  "video": "apresentacao/videos/ato-segundo.mp4",
+  "poster": "apresentacao/videos/ato-segundo.jpg",
+  "mesa": "apresentacao/videos/ato-segundo-mesa.jpg",
+  "passos": [
+   17,
+   18,
+   19,
+   20,
+   21,
+   22
+  ],
+  "gravado": "2026-10-14T19:28:59.512Z"
+ },
+ "forma": {
+  "video": "apresentacao/videos/ato-forma.mp4",
+  "poster": "apresentacao/videos/ato-forma.jpg",
+  "mesa": "apresentacao/videos/ato-forma-mesa.jpg",
+  "passos": [
+   1
+  ],
+  "gravado": "2026-10-14T19:27:18.477Z"
+ },
+ "couvert": {
+  "video": "apresentacao/videos/ato-couvert.mp4",
+  "poster": "apresentacao/videos/ato-couvert.jpg",
+  "mesa": "apresentacao/videos/ato-couvert-mesa.jpg",
+  "passos": [
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "gravado": "2026-10-14T19:27:55.522Z"
+ },
+ "primeiro": {
+  "video": "apresentacao/videos/ato-primeiro.mp4",
+  "poster": "apresentacao/videos/ato-primeiro.jpg",
+  "mesa": "apresentacao/videos/ato-primeiro-mesa.jpg",
+  "passos": [
+   9
+  ],
+  "gravado": "2026-10-14T19:28:20.696Z"
+ },
+ "terceiro": {
+  "video": "apresentacao/videos/ato-terceiro.mp4",
+  "poster": "apresentacao/videos/ato-terceiro.jpg",
+  "mesa": "apresentacao/videos/ato-terceiro-mesa.jpg",
+  "passos": [
+   24
+  ],
+  "gravado": "2026-10-14T19:29:24.796Z"
+ },
+ "quarto": {
+  "video": "apresentacao/videos/ato-quarto.mp4",
+  "poster": "apresentacao/videos/ato-quarto.jpg",
+  "mesa": "apresentacao/videos/ato-quarto-mesa.jpg",
+  "passos": [
+   26
+  ],
+  "gravado": "2026-10-14T19:29:50.051Z"
+ },
+ "sobremesa": {
+  "video": "apresentacao/videos/ato-sobremesa.mp4",
+  "poster": "apresentacao/videos/ato-sobremesa.jpg",
+  "mesa": "apresentacao/videos/ato-sobremesa-mesa.jpg",
+  "passos": [
+   28
+  ],
+  "gravado": "2026-10-14T19:30:15.214Z"
+ }
+}

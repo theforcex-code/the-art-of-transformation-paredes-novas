@@ -1,0 +1,61 @@
+{
+ "trilha": "ambiente-01-forma.ogg",
+ "voz": "voz-01-forma-carla.ogg",
+ "como": "posição da voz na trilha por correlação do envelope (100 Hz, banda 250-1800 Hz); confirmada pela energia na banda de voz; a fala dentro do arquivo de voz vai de 0,05 s a 23,85 s (o resto é silêncio e eco): cada fala dura 24 s",
+ "falas": [
+  [
+   12.0,
+   24.0
+  ],
+  [
+   105.6,
+   24.0
+  ],
+  [
+   199.3,
+   24.0
+  ],
+  [
+   292.9,
+   24.0
+  ],
+  [
+   386.5,
+   24.0
+  ],
+  [
+   480.2,
+   24.0
+  ],
+  [
+   573.8,
+   24.0
+  ],
+  [
+   667.4,
+   24.0
+  ],
+  [
+   761.1,
+   24.0
+  ],
+  [
+   854.7,
+   24.0
+  ]
+ ],
+ "frases_dentro_da_fala": [
+  [
+   0.0,
+   2.9
+  ],
+  [
+   3.6,
+   20.1
+  ],
+  [
+   20.7,
+   23.8
+  ]
+ ]
+}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Art of Transformation · Atos</title>
+  <link rel="stylesheet" href="apresentacao.css?v=127">
+  <script defer src="vendor/lenis-1.1.20.min.js"></script>
+  <script defer src="apresentacao.js?v=376"></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="brand" href="#topo" aria-label="Início"></a>
+    <nav class="acts-nav" id="acts-nav" aria-label="Atos"></nav>
+    <button type="button" id="edit-toggle" class="btn" aria-pressed="false">Editar imagens</button>
+  </header>
+  <main id="deck">
+    <section class="cover" id="topo"><p class="loading">Carregando o roteiro…</p></section>
+  </main>
+  <dialog id="gallery" aria-labelledby="gallery-title">
+    <form method="dialog" class="picker-head">
+      <h2 id="gallery-title">Imagens</h2>
+      <button class="btn" value="close">Fechar</button>
+    </form>
+    <div class="gallery-list" id="gallery-list"></div>
+  </dialog>
+  <dialog id="groups" aria-labelledby="groups-title">
+    <form method="dialog" class="picker-head">
+      <h2 id="groups-title">Adicionar grupo do roteiro</h2>
+      <button class="btn" value="close">Fechar</button>
+    </form>
+    <div class="groups-list" id="groups-list"></div>
+  </dialog>
+  <dialog id="picker" aria-labelledby="picker-title">
+    <form method="dialog" class="picker-head">
+      <h2 id="picker-title">Escolher imagem</h2>
+      <label class="field">Etapa <select id="picker-stage"></select></label>
+      <button type="button" class="btn" id="picker-upload">Enviar do computador</button>
+      <input type="file" id="picker-file" accept="image/*,video/*" hidden>
+      <button class="btn" value="close">Fechar</button>
+    </form>
+    <div class="picker-grid" id="picker-grid"></div>
+  </dialog>
+</body>
+</html>

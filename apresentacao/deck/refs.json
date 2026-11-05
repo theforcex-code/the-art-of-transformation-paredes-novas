@@ -1,0 +1,122 @@
+{
+ "couvert": [
+  {
+   "img": "apresentacao/deck/couvert-1.jpg?v=2",
+   "cap": "Welcome drink: Botanical Elixir",
+   "w": 2000,
+   "h": 1091
+  }
+ ],
+ "primeiro": [
+  {
+   "img": "apresentacao/deck/primeiro-1.jpg?v=2",
+   "cap": "Tartar de filé-mignon",
+   "w": 2000,
+   "h": 1331
+  },
+  {
+   "img": "apresentacao/deck/primeiro-2.jpg?v=2",
+   "cap": "Tartar de filé-mignon",
+   "w": 2000,
+   "h": 2000
+  }
+ ],
+ "segundo": [
+  {
+   "img": "apresentacao/deck/segundo-1.jpg?v=2",
+   "cap": "Burrata, figo caramelizado e pesto de rúcula",
+   "w": 2000,
+   "h": 1391
+  },
+  {
+   "img": "apresentacao/deck/segundo-2.jpg?v=2",
+   "cap": "Burrata, figo caramelizado e pesto de rúcula",
+   "w": 2000,
+   "h": 1487
+  },
+  {
+   "img": "apresentacao/deck/segundo-3.jpg?v=2",
+   "cap": "Opção B: palmito pupunha, tomate, coco e avocado",
+   "w": 2000,
+   "h": 1333
+  }
+ ],
+ "terceiro": [
+  {
+   "img": "apresentacao/deck/terceiro-3.jpg?v=2",
+   "cap": "Opção B: risoto de abobrinha",
+   "w": 2000,
+   "h": 2000
+  },
+  {
+   "img": "apresentacao/deck/terceiro-1.jpg?v=2",
+   "cap": "Opção A: nhoque",
+   "w": 2000,
+   "h": 1334
+  },
+  {
+   "img": "apresentacao/deck/terceiro-2.jpg?v=2",
+   "cap": "Opção A: nhoque",
+   "w": 2000,
+   "h": 2000
+  }
+ ],
+ "quarto": [
+  {
+   "img": "apresentacao/deck/quarto-3.jpg?v=2",
+   "cap": "Opções do prato principal",
+   "w": 2000,
+   "h": 2000
+  },
+  {
+   "img": "apresentacao/deck/quarto-1.jpg?v=2",
+   "cap": "Opções do prato principal",
+   "w": 2000,
+   "h": 2000
+  },
+  {
+   "img": "apresentacao/deck/quarto-2.jpg?v=2",
+   "cap": "Opções do prato principal",
+   "w": 2000,
+   "h": 1993
+  },
+  {
+   "img": "apresentacao/deck/quarto-4.jpg?v=2",
+   "cap": "Opções do prato principal",
+   "w": 2000,
+   "h": 1443
+  },
+  {
+   "img": "apresentacao/deck/quarto-5.jpg?v=2",
+   "cap": "Opções do prato principal",
+   "w": 2000,
+   "h": 1333
+  }
+ ],
+ "sobremesa": [
+  {
+   "img": "apresentacao/deck/sobremesa-2.jpg?v=2",
+   "cap": "O prato como escultura viva",
+   "w": 1600,
+   "h": 2000
+  },
+  {
+   "img": "apresentacao/deck/sobremesa-1.jpg?v=2",
+   "cap": "O prato como escultura viva",
+   "w": 2000,
+   "h": 1125
+  },
+  {
+   "img": "apresentacao/deck/sobremesa-3.jpg?v=2",
+   "cap": "O prato como escultura viva",
+   "w": 2000,
+   "h": 1500
+  },
+  {
+   "img": "apresentacao/deck/sobremesa-4.jpg?v=2",
+   "cap": "O prato como escultura viva",
+   "w": 2000,
+   "h": 1000
+  }
+ ]
+}
